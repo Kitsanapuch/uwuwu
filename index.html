@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Dark Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    a {
+      color: #00aaff;
+      text-decoration: none;
+    }
+
+    /* ---------- RAIN EFFECT ---------- */
+    .rain-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .raindrop {
+      position: absolute;
+      width: 2px;
+      height: 20px;
+      background: linear-gradient(to bottom, rgba(0, 170, 255, 0.3), rgba(0, 170, 255, 0.8));
+      box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+      animation: fall linear infinite;
+      transform: rotate(15deg);
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-100vh) rotate(15deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(100vh) rotate(15deg);
+        opacity: 0.3;
+      }
+    }
+
+    /* ---------- LOADING ---------- */
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .loader-name {
+      color: #ffffff;
+      font-size: 1.5rem;
+      text-shadow: 0 0 8px #00aaff;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .loader-image-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .loader-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 4px solid #00aaff;
+      object-fit: cover;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .lightning-wrapper {
+      position: absolute;
+      width: 84px;
+      height: 84px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .lightning-bolt {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      transform: skew(-15deg);
+      box-shadow: 0 0 8px #00ff00, 0 0 15px #00ff0066;
+      filter: blur(1px);
+      transform-origin: center 42px;
+      animation: rotateLightning 1.5s linear infinite;
+    }
+
+    .lightning-bolt:nth-child(1) { transform: rotate(0deg) translateY(-42px); background: #00ff00; }
+    .lightning-bolt:nth-child(2) { transform: rotate(45deg) translateY(-42px); background: #ffff00; }
+    .lightning-bolt:nth-child(3) { transform: rotate(90deg) translateY(-42px); background: #00ff00; }
+    .lightning-bolt:nth-child(4) { transform: rotate(135deg) translateY(-42px); background: #ffff00; }
+    .lightning-bolt:nth-child(5) { transform: rotate(180deg) translateY(-42px); background: #00ff00; }
+    .lightning-bolt:nth-child(6) { transform: rotate(225deg) translateY(-42px); background: #ffff00; }
+    .lightning-bolt:nth-child(7) { transform: rotate(270deg) translateY(-42px); background: #00ff00; }
+    .lightning-bolt:nth-child(8) { transform: rotate(315deg) translateY(-42px); background: #ffff00; }
+
+    .loader-text {
+      color: #ffffff;
+      font-size: 1.2rem;
+      text-shadow: 0 0 8px #00aaff;
+      margin-top: 1rem;
+      transform: translateY(10px);
+    }
+
+    .loader-percentage {
+      color: #ffffff;
+      font-size: 1rem;
+      text-shadow: 0 0 8px #00aaff;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar {
+      width: 150px;
+      height: 8px;
+      background: #222;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .progress {
+      width: 0;
+      height: 100%;
+      background: #00aaff;
+      border-radius: 4px;
+      transition: width 1s linear;
+    }
+
+    @keyframes rotateLightning {
+      to { transform: rotate(360deg) translateY(-42px) skew(-15deg); }
+    }
+
+    /* ---------- HEADER ---------- */
+    header {
+      text-align: center;
+      padding: 4rem 1rem 2rem;
+      background: radial-gradient(circle at center, #1b1b1b 0%, #0a0a0a 100%);
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      color: #00aaff;
+      text-shadow: 0 0 12px #00aaff;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #aaa;
+      margin-top: 0.5rem;
+    }
+
+    /* ---------- CENTRAL IMAGE STYLE ---------- */
+    .image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+      position: relative;
+      flex-direction: column;
+    }
+
+    .circle-image {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 5px solid #00aaff;
+      object-fit: cover;
+      z-index: 2;
+    }
+
+    /* ---------- BUTTON CONTAINER ---------- */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    /* ---------- ICONS AROUND PROFILE IMAGE ---------- */
+    .icons-container {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .icon {
+      position: absolute;
+      font-size: 24px;
+      transition: transform 0.3s ease;
+      color: white;
+      transform-origin: center center;
+      animation: orbit var(--orbit-speed) linear infinite;
+      text-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+      --orbit-radius: 100px;
+      --orbit-angle: 0deg;
+      --orbit-speed: 12s;
+    }
+
+    .icon-html { color: #e44d26; }
+    .icon-css { color: #2965f1; }
+    .icon-js { color: #f7df1e; }
+    .icon-react { color: #61dafb; }
+    .icon-node { color: #8cc84b; }
+    .icon-angular { color: #dd0031; }
+    .icon-python { color: #306998; }
+    .icon-github { color: #333; }
+
+    .icon:hover {
+      transform: scale(1.4);
+      text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+    }
+
+    .icon:nth-child(1) { --orbit-radius: 110px; --orbit-angle: 0deg; --orbit-speed: 11s; animation-delay: 0s; }
+    .icon:nth-child(2) { --orbit-radius: 95px; --orbit-angle: 45deg; --orbit-speed: 13s; animation-delay: -2s; }
+    .icon:nth-child(3) { --orbit-radius: 100px; --orbit-angle: 90deg; --orbit-speed: 12s; animation-delay: -4s; }
+    .icon:nth-child(4) { --orbit-radius: 105px; --orbit-angle: 135deg; --orbit-speed: 10s; animation-delay: -6s; }
+    .icon:nth-child(5) { --orbit-radius: 90px; --orbit-angle: 180deg; --orbit-speed: 14s; animation-delay: -8s; }
+    .icon:nth-child(6) { --orbit-radius: 115px; --orbit-angle: 225deg; --orbit-speed: 11.5s; animation-delay: -10s; }
+    .icon:nth-child(7) { --orbit-radius: 100px; --orbit-angle: 270deg; --orbit-speed: 12.5s; animation-delay: -12s; }
+    .icon:nth-child(8) { --orbit-radius: 110px; --orbit-angle: 315deg; --orbit-speed: 13.5s; animation-delay: -14s; }
+
+    @keyframes orbit {
+      0% {
+        transform: rotate(var(--orbit-angle)) translateX(var(--orbit-radius)) rotate(calc(-1 * var(--orbit-angle))) scale(0.8);
+        opacity: 0.6;
+        z-index: 1;
+      }
+      25% {
+        transform: rotate(calc(var(--orbit-angle) + 90deg)) translateX(calc(var(--orbit-radius) * 0.8)) translateY(calc(var(--orbit-radius) * 0.2)) rotate(calc(-1 * (var(--orbit-angle) + 90deg))) scale(1);
+        opacity: 0.8;
+        z-index: 2;
+      }
+      50% {
+        transform: rotate(calc(var(--orbit-angle) + 180deg)) translateX(var(--orbit-radius)) rotate(calc(-1 * (var(--orbit-angle) + 180deg))) scale(1.2);
+        opacity: 1;
+        z-index: 3;
+      }
+      75% {
+        transform: rotate(calc(var(--orbit-angle) + 270deg)) translateX(calc(var(--orbit-radius) * 0.8)) translateY(calc(var(--orbit-radius) * -0.2)) rotate(calc(-1 * (var(--orbit-angle) + 270deg))) scale(1);
+        opacity: 0.8;
+        z-index: 2;
+      }
+      100% {
+        transform: rotate(calc(var(--orbit-angle) + 360deg)) translateX(var(--orbit-radius)) rotate(calc(-1 * (var(--orbit-angle) + 360deg))) scale(0.8);
+        opacity: 0.6;
+        z-index: 1;
+      }
+    }
+
+    /* ---------- ABOUT ME BUTTON ---------- */
+    .about-button {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background-color: #141414;
+      border: 2px solid #00aaff;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 1rem;
+      text-align: center;
+      text-shadow: 0 0 8px #00aaff, 0 0 12px #00aaff66;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00aaff66;
+    }
+
+    .about-button:hover {
+      background-color: #00aaff;
+      color: #0a0a0a;
+      box-shadow: 0 0 15px #00aaff, 0 0 25px #00aaff99;
+      transform: translateY(-2px);
+    }
+
+    section {
+      padding: 2rem 4vw;
+    }
+
+    section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #00aaff;
+      text-shadow: 0 0 8px #0088cc;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(280px, 1fr));
+      grid-template-areas: 
+        "education skills things";
+      gap: 2rem;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: #141414;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 0 15px #00112244;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      box-shadow: 0 0 20px #00aaff66;
+    }
+
+    .card h3 {
+      color: #00ccff;
+      margin-bottom: 0.5rem;
+    }
+
+    .card ul {
+      padding-left: 1.2rem;
+    }
+
+    .card ul li {
+      margin-bottom: 0.4rem;
+      color: #bbb;
+    }
+
+    .education-card {
+      grid-area: education;
+    }
+
+    .skills-card {
+      grid-area: skills;
+    }
+
+    .things-card {
+      grid-area: things;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #222;
+      margin-top: 2rem;
+    }
+
+    /* ---------- CUSTOM CURSOR ---------- */
+    .circle {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      background-color: #66ccff;
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 10px #66ccff, 0 0 20px #66ccff66;
+      transition: transform 0.08s ease;
+      z-index: 9999;
+    }
+
+    @media (max-width: 900px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+          "education"
+          "skills"
+          "things";
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- RAIN CONTAINER -->
+  <div class="rain-container"></div>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-content">
+      <h1 class="loader-name">KITSANAPUCH CHUAIBAMRUNG</h1>
+      <div class="loader-image-container">
+        <img src="IMG_2982.jpg" alt="Profile Image" class="loader-image"/>
+        <div class="lightning-wrapper">
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+        </div>
+      </div>
+      <p class="loader-text">กำลังโหลดผลงาน</p>
+      <p class="loader-percentage">1%</p>
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CURSOR -->
+  <div id="circle" class="circle"></div>
+  
+
+  <!-- HEADER -->
+  <header>
+    <h1>Welcome To My Website</h1>
+    <p>An Enthusiast in Cybersecurity and Computer Technology</p>
+  </header>
+
+  <!-- CENTRAL IMAGE -->
+  <div class="image-container">
+    <img src="IMG_0130-removebg-preview.png" alt="Profile Image" class="circle-image"/>
+    <div class="icons-container">
+      <i class="fab fa-html5 icon icon-html"></i>
+      <i class="fab fa-css3-alt icon icon-css"></i>
+      <i class="fab fa-js icon icon-js"></i>
+      <i class="fab fa-react icon icon-react"></i>
+      <i class="fab fa-node icon icon-node"></i>
+      <i class="fab fa-angular icon icon-angular"></i>
+      <i class="fab fa-python icon icon-python"></i>
+      <i class="fab fa-github icon icon-github"></i>
+    </div>
+    <div class="button-container">
+      <a href="about.html" class="about-button">Learn More About Me</a>
+      <a href="project1.html" class="about-button">View All Projects</a>
+    </div>
+  </div>
+
+  <!-- About Me, Skills, etc. -->
+  <section>
+    <h2>About Me</h2>
+    <div class="info-grid">
+      <div class="card education-card">
+        <h3>Education</h3>
+        <ul>
+          <li>PSU WIHAYANUSORN SURATTHANI SCHOOL</li>
+        </ul>
+      </div>
+      <div class="card skills-card">
+        <h3>Skills & Strengths</h3>
+        <ul>
+          <li>HTML, CSS, JavaScript</li>
+          <li>React.js & Tailwind</li>
+          <li>UI/UX Design with Figma</li>
+          <li>Creative Problem Solving</li>
+        </ul>
+      </div>
+      <div class="card things-card">
+        <h3>Things I Love</h3>
+        <ul>
+          <li>Designing sleek UI</li>
+          <li>Coding fun web interactions</li>
+          <li>Learning new tech</li>
+          <li>Gaming & Synthwave Music</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2025 DevDark | Designed with passion ⚡
+  </footer>
+
+  <!-- JS -->
+  <script>
+    // Rain effect
+    function createRaindrops() {
+      const rainContainer = document.querySelector('.rain-container');
+      const dropCount = 100;
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'raindrop';
+        const size = Math.random() * 0.5 + 0.5;
+        drop.style.width = `${2 * size}px`;
+        drop.style.height = `${20 * size}px`;
+        drop.style.left = `${Math.random() * 100}vw`;
+        drop.style.animationDuration = `${Math.random() * 1 + 1}s`;
+        drop.style.animationDelay = `${Math.random() * 2}s`;
+        drop.style.opacity = Math.random() * 0.4 + 0.3;
+        drop.style.filter = `blur(${Math.random() * 1}px)`;
+        drop.style.zIndex = Math.random() < 0.5 ? 0 : 2;
+        rainContainer.appendChild(drop);
+      }
+    }
+    createRaindrops();
+
+    // Glowing cursor
+    const circle = document.getElementById('circle');
+    document.addEventListener('mousemove', (e) => {
+      circle.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`;
+    });
+
+    // Page load
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loader');
+      const percentageElement = document.querySelector('.loader-percentage');
+      const progressBar = document.querySelector('.loader-content .progress');
+      let percentage = 1;
+      const interval = setInterval(() => {
+        percentageElement.textContent = `${percentage}%`;
+        progressBar.style.width = `${percentage}%`;
+        percentage += 1;
+        if (percentage > 100) {
+          clearInterval(interval);
+        }
+      }, 10);
+      setTimeout(() => {
+        loader.classList.add('hidden');
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

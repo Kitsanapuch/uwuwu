@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Projects | Dark Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    a {
+      color: #00aaff;
+      text-decoration: none;
+    }
+
+    /* ---------- NAVIGATION BAR ---------- */
+    .navbar {
+      background: #1b1b1b;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      border-bottom: 1px solid #00aaff;
+      box-shadow: 0 0 10px #00aaff66;
+    }
+
+    .navbar a {
+      color: #ffffff;
+      font-size: 1rem;
+      text-shadow: 0 0 8px #00aaff66;
+      transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      color: #00aaff;
+      text-shadow: 0 0 12px #00aaff;
+    }
+
+    .navbar a.active {
+      color: #00aaff;
+      border-bottom: 2px solid #00aaff;
+    }
+
+    /* ---------- RAIN EFFECT ---------- */
+    .rain-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .raindrop {
+      position: absolute;
+      width: 2px;
+      height: 20px;
+      background: linear-gradient(to bottom, rgba(0, 170, 255, 0.3), rgba(0, 170, 255, 0.8));
+      box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+      animation: fall linear infinite;
+      transform: rotate(15deg);
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-100vh) rotate(15deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(100vh) rotate(15deg);
+        opacity: 0.3;
+      }
+    }
+
+    /* ---------- LOADING ---------- */
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .loader-name {
+      color: #ffffff;
+      font-size: 1.5rem;
+      text-shadow: 0 0 8px #00aaff;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .loader-image-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .loader-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 4px solid #00aaff;
+      object-fit: cover;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .lightning-wrapper {
+      position: absolute;
+      width: 84px;
+      height: 84px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .lightning-bolt {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      transform: skew(-15deg);
+      box-shadow: 0 0 8px #00ff00, 0 0 15px #00ff0066;
+      filter: blur(1px);
+      transform-origin: center 42px;
+      animation: rotateLightning 1.5s linear infinite;
+    }
+
+    .lightning-bolt:nth-child(1) { transform: rotate(0deg) translateY(-42px); background: #00ff00; }
+    .lightning-bolt:nth-child(2) { transform: rotate(45deg) translateY(-42px); background: #ffff00; }
+    .lightning-bolt:nth-child(3) { transform: rotate(90deg) translateY(-42px); background: #00ff00; }
+    .lightning-bolt:nth-child(4) { transform: rotate(135deg) translateY(-42px); background: #ffff00; }
+    .lightning-bolt:nth-child(5) { transform: rotate(180deg) translateY(-42px); background: #00ff00; }
+    .lightning-bolt:nth-child(6) { transform: rotate(225deg) translateY(-42px); background: #ffff00; }
+    .lightning-bolt:nth-child(7) { transform: rotate(270deg) translateY(-42px); background: #00ff00; }
+    .lightning-bolt:nth-child(8) { transform: rotate(315deg) translateY(-42px); background: #ffff00; }
+
+    .loader-text {
+      color: #ffffff;
+      font-size: 1.2rem;
+      text-shadow: 0 0 8px #00aaff;
+      margin-top: 1rem;
+      transform: translateY(10px);
+    }
+
+    .loader-percentage {
+      color: #ffffff;
+      font-size: 1rem;
+      text-shadow: 0 0 8px #00aaff;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar {
+      width: 150px;
+      height: 8px;
+      background: #222;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .progress {
+      width: 0;
+      height: 100%;
+      background: #00aaff;
+      border-radius: 4px;
+      transition: width 1s linear;
+    }
+
+    @keyframes rotateLightning {
+      to { transform: rotate(360deg) translateY(-42px) skew(-15deg); }
+    }
+
+    /* ---------- TOP-LEFT IMAGE ---------- */
+    .top-left-image-container {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      width: 80px;
+      height: 80px;
+      z-index: 9998;
+    }
+
+    .top-left-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 4px solid #00aaff;
+      object-fit: cover;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .icons-container {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .tech-icon {
+      position: absolute;
+      font-size: 1.2rem;
+      text-shadow: 0 0 8px #00aaff66;
+      transform-origin: center 50px;
+      animation: orbit 8s linear infinite;
+    }
+
+    .tech-icon.fa-code { color: #00ff00; }
+    .tech-icon.fa-terminal { color: #ffffff; }
+    .tech-icon.fa-python { color: #306998; }
+    .tech-icon.fa-js-square { color: #f0db4f; }
+    .tech-icon.fa-database { color: #00758f; }
+    .tech-icon.fa-laptop-code { color: #ff5733; }
+    .tech-icon.fa-bug { color: #ff0000; }
+    .tech-icon.fa-cogs { color: #808080; }
+
+    .tech-icon:nth-child(1) { transform: rotate(0deg) translateY(-50px); animation-delay: 0s; }
+    .tech-icon:nth-child(2) { transform: rotate(45deg) translateY(-50px); animation-delay: -1s; }
+    .tech-icon:nth-child(3) { transform: rotate(90deg) translateY(-50px); animation-delay: -2s; }
+    .tech-icon:nth-child(4) { transform: rotate(135deg) translateY(-50px); animation-delay: -3s; }
+    .tech-icon:nth-child(5) { transform: rotate(180deg) translateY(-50px); animation-delay: -4s; }
+    .tech-icon:nth-child(6) { transform: rotate(225deg) translateY(-50px); animation-delay: -5s; }
+    .tech-icon:nth-child(7) { transform: rotate(270deg) translateY(-50px); animation-delay: -6s; }
+    .tech-icon:nth-child(8) { transform: rotate(315deg) translateY(-50px); animation-delay: -7s; }
+
+    @keyframes orbit {
+      to { transform: rotate(360deg) translateY(-50px); }
+    }
+
+    /* ---------- HEADER ---------- */
+    header {
+      text-align: center;
+      padding: 4rem 1rem 2rem;
+      background: radial-gradient(circle at center, #1b1b1b 0%, #0a0a0a 100%);
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      color: #00aaff;
+      text-shadow: 0 0 12px #00aaff;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #aaa;
+      margin-top: 0.5rem;
+    }
+
+    /* ---------- PROJECTS SECTION ---------- */
+    .projects-section {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem 4vw;
+    }
+
+    .projects-section h2 {
+      font-size: 1.8rem;
+      color: #00aaff;
+      text-shadow: 0 0 8px #0088cc;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .filter-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-tab {
+      padding: 0.8rem 2rem;
+      background-color: #141414;
+      border: 2px solid #00aaff;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 1rem;
+      text-shadow: 0 0 8px #00aaff66;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00aaff66;
+    }
+
+    .filter-tab:hover {
+      background-color: #00aaff;
+      color: #0a0a0a;
+      box-shadow: 0 0 15px #00aaff;
+    }
+
+    .filter-tab.active {
+      background-color: #00aaff;
+      color: #0a0a0a;
+      box-shadow: 0 0 15px #00aaff, 0 0 25px #00aaff99;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .filter-tab[data-filter="software"].active ~ .projects-grid,
+    .filter-tab[data-filter="project"].active ~ .projects-grid,
+    .filter-tab[data-filter="robotic"].active ~ .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .project-card {
+      background-color: #141414;
+      border: 2px solid #00aaff;
+      border-radius: 12px;
+      padding: 0.8rem;
+      box-shadow: 0 0 10px #00aaff66;
+      text-align: center;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .project-card.hidden {
+      display: none;
+    }
+
+    .project-card:hover {
+      box-shadow: 0 0 20px #00aaffcc;
+      transform: translateY(-5px);
+    }
+
+    .project-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+    }
+
+    .project-card h3 {
+      font-size: 1rem;
+      color: #00ccff;
+      margin-bottom: 0.4rem;
+    }
+
+    .project-card p {
+      font-size: 0.8rem;
+      color: #bbb;
+      margin-bottom: 0.8rem;
+      flex-grow: 1;
+    }
+
+    .project-card .details-button {
+      display: inline-block;
+      padding: 0.6rem 1.5rem;
+      background-color: #141414;
+      border: 2px solid #00aaff;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      text-align: center;
+      text-shadow: 0 0 8px #00aaff, 0 0 12px #00aaff66;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00aaff66;
+      cursor: pointer;
+    }
+
+    .project-card .details-button:hover {
+      background-color: #00aaff;
+      color: #0a0a0a;
+      box-shadow: 0 0 15px #00aaff, 0 0 25px #00aaff99;
+      transform: translateY(-2px);
+    }
+
+    /* ---------- CAROUSEL STYLING ---------- */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      height: 150px;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+    }
+
+    .filter-tab[data-filter="software"].active ~ .projects-grid .project-card[data-category="software"] .carousel-container,
+    .filter-tab[data-filter="project"].active ~ .projects-grid .project-card[data-category="project"] .carousel-container,
+    .filter-tab[data-filter="robotic"].active ~ .projects-grid .project-card[data-category="robotic"] .carousel-container {
+      height: 250px;
+    }
+
+    .carousel {
+      display: flex;
+      transition: transform 0.5s ease;
+      width: 300%;
+    }
+
+    .project-card[data-category="project"] .carousel {
+      width: 400%;
+    }
+
+    .carousel img {
+      width: 33.33%;
+      height: 150px;
+      object-fit: cover;
+      border: 2px solid #00aaff;
+      box-shadow: 0 0 10px #00aaff66;
+    }
+
+    .project-card[data-category="project"] .carousel img,
+    .modal#modal2 .carousel img {
+      width: 25%;
+    }
+
+    .filter-tab[data-filter="software"].active ~ .projects-grid .project-card[data-category="software"] .carousel img,
+    .filter-tab[data-filter="project"].active ~ .projects-grid .project-card[data-category="project"] .carousel img,
+    .filter-tab[data-filter="robotic"].active ~ .projects-grid .project-card[data-category="robotic"] .carousel img {
+      height: 250px;
+    }
+
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 170, 255, 0.5);
+      border: none;
+      color: #ffffff;
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      cursor: pointer;
+      z-index: 2;
+      transition: background-color 0.3s ease;
+    }
+
+    .carousel-button:hover {
+      background-color: #00aaff;
+    }
+
+    .carousel-button.prev {
+      left: 10px;
+    }
+
+    .carousel-button.next {
+      right: 10px;
+    }
+
+    /* ---------- MODAL STYLING ---------- */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #1b1b1b;
+      border: 2px solid #00aaff;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      padding: 2rem;
+      position: relative;
+      box-shadow: 0 0 20px #00aaff66;
+      color: #e0e0e0;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-content .carousel-container {
+      width: 110%;
+      left: -5%;
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .modal-content .carousel img {
+      width: 33.33%;
+      height: 200px;
+      object-fit: cover;
+      border: 2px solid #00aaff;
+      box-shadow: 0 0 10px #00aaff66;
+    }
+
+    .modal-content h3 {
+      font-size: 1.8rem;
+      color: #00ccff;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 8px #00aaff66;
+    }
+
+    .modal-content p {
+      font-size: 1rem;
+      color: #bbb;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      color: #00aaff;
+      cursor: pointer;
+      text-shadow: 0 0 8px #00aaff66;
+      transition: color 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: #00ccff;
+    }
+
+    /* ---------- PROJECT DETAILS FRAME ---------- */
+    .project-details-frame {
+      background-color: #141414;
+      border: 2px solid #00aaff;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      box-shadow: 0 0 10px #00aaff66;
+    }
+
+    .project-details-frame h4 {
+      color: #00ccff;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 8px #00aaff66;
+    }
+
+    .project-details-frame p {
+      font-size: 0.9rem;
+      color: #bbb;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #222;
+      margin-top: 2rem;
+    }
+
+    /* ---------- CUSTOM CURSOR ---------- */
+    .circle {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      background-color: #00aaff;
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff66;
+      transition: transform 0.08s ease;
+      z-index: 9999;
+    }
+
+    @media (max-width: 900px) {
+      .projects-grid,
+      .filter-tab[data-filter="software"].active ~ .projects-grid,
+      .filter-tab[data-filter="project"].active ~ .projects-grid,
+      .filter-tab[data-filter="robotic"].active ~ .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-tabs {
+        flex-wrap: wrap;
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+        max-height: 85vh;
+      }
+
+      .modal-content .carousel-container {
+        width: 100%;
+        left: 0;
+        height: 100px;
+      }
+
+      .modal-content .carousel img {
+        height: 100px;
+      }
+
+      .navbar {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .carousel-container {
+        height: 100px;
+      }
+
+      .carousel img {
+        height: 100px;
+      }
+
+      .filter-tab[data-filter="software"].active ~ .projects-grid .project-card[data-category="software"] .carousel-container,
+      .filter-tab[data-filter="project"].active ~ .projects-grid .project-card[data-category="project"] .carousel-container,
+      .filter-tab[data-filter="robotic"].active ~ .projects-grid .project-card[data-category="robotic"] .carousel-container {
+        height: 150px;
+      }
+
+      .filter-tab[data-filter="software"].active ~ .projects-grid .project-card[data-category="software"] .carousel img,
+      .filter-tab[data-filter="project"].active ~ .projects-grid .project-card[data-category="project"] .carousel img,
+      .filter-tab[data-filter="robotic"].active ~ .projects-grid .project-card[data-category="robotic"] .carousel img {
+        height: 150px;
+      }
+
+      .project-details-frame h4 {
+        font-size: 1rem;
+      }
+
+      .project-details-frame p {
+        font-size: 0.8rem;
+      }
+
+      .top-left-image-container {
+        width: 60px;
+        height: 60px;
+      }
+
+      .top-left-image {
+        width: 60px;
+        height: 60px;
+        border: 3px solid #00aaff;
+      }
+
+      .icons-container {
+        width: 80px;
+        height: 80px;
+      }
+
+      .tech-icon {
+        font-size: 1rem;
+        transform-origin: center 40px;
+      }
+
+      .tech-icon:nth-child(1) { transform: rotate(0deg) translateY(-40px); }
+      .tech-icon:nth-child(2) { transform: rotate(45deg) translateY(-40px); }
+      .tech-icon:nth-child(3) { transform: rotate(90deg) translateY(-40px); }
+      .tech-icon:nth-child(4) { transform: rotate(135deg) translateY(-40px); }
+      .tech-icon:nth-child(5) { transform: rotate(180deg) translateY(-40px); }
+      .tech-icon:nth-child(6) { transform: rotate(225deg) translateY(-40px); }
+      .tech-icon:nth-child(7) { transform: rotate(270deg) translateY(-40px); }
+      .tech-icon:nth-child(8) { transform: rotate(315deg) translateY(-40px); }
+    }
+  </style>
+</head>
+<body>
+  <!-- TOP-LEFT IMAGE -->
+  <div class="top-left-image-container">
+    <img src="IMG_2982.jpg" alt="Profile Image" class="top-left-image"/>
+    <div class="icons-container">
+      <i class="tech-icon fas fa-code"></i>
+      <i class="tech-icon fas fa-terminal"></i>
+      <i class="tech-icon fab fa-python"></i>
+      <i class="tech-icon fab fa-js-square"></i>
+      <i class="tech-icon fas fa-database"></i>
+      <i class="tech-icon fas fa-laptop-code"></i>
+      <i class="tech-icon fas fa-bug"></i>
+      <i class="tech-icon fas fa-cogs"></i>
+    </div>
+  </div>
+
+  <!-- RAIN CONTAINER -->
+  <div class="rain-container"></div>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-content">
+      <h1 class="loader-name">KITSANAPUCH CHUAIBAMRUNG</h1>
+      <div class="loader-image-container">
+        <img src="IMG_2982.jpg" alt="Profile Image" class="loader-image"/>
+        <div class="lightning-wrapper">
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+          <div class="lightning-bolt"></div>
+        </div>
+      </div>
+      <p class="loader-text">Loading Portfolio</p>
+      <p class="loader-percentage">1%</p>
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CURSOR -->
+  <div id="circle" class="circle"></div>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="navbar">
+    <a href="index.html" class="active">Home</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <!-- HEADER -->
+  <header>
+    <h1>My Projects</h1>
+    <p>A Showcase of My Work in Technology, Physics, and Research</p>
+  </header>
+
+  <!-- PROJECTS SECTION -->
+  <section class="projects-section">
+    <h2>All Projects</h2>
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="software">Software</button>
+      <button class="filter-tab" data-filter="project">Project</button>
+      <button class="filter-tab" data-filter="robotic">Robotic</button>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card" data-category="software">
+        <div class="carousel-container">
+          <div class="carousel">
+            <img src="ภาพถ่ายหน้าจอ1.png" alt="Profit Calculator Screenshot 1"/>
+            <img src="ภาพถ่ายหน้าจอ2.png" alt="Profit Calculator Screenshot 2"/>
+            <img src="ภาพถ่ายหน้าจอ3.png" alt="Profit Calculator Screenshot 3"/>
+          </div>
+          <button class="carousel-button prev">❮</button>
+          <button class="carousel-button next">❯</button>
+        </div>
+        <h3>Profit Calculator</h3>
+        <p>A Python-based application to calculate selling prices based on cost and profit percentage.</p>
+        <button class="details-button" data-modal="modal1">View Details</button>
+      </div>
+      <div class="project-card" data-category="project">
+        <div class="carousel-container">
+          <div class="carousel">
+            <img src="IMG_4759.jpg" alt="Guava Quality Analysis Image 1"/>
+            <img src="IMG_4761.jpg" alt="Guava Quality Analysis Image 2"/>
+            <img src="IMG_4831.jpg" alt="Guava Quality Analysis Image 3"/>
+            <img src="IMG_4771.jpg" alt="Guava Quality Analysis Image 4"/>
+          </div>
+          <button class="carousel-button prev">❮</button>
+          <button class="carousel-button next">❯</button>
+        </div>
+        <h3>Guava Quality Analysis</h3>
+        <p>A Biophysics project analyzing electrical properties to assess postharvest guava quality, presented at SPC2025.</p>
+        <button class="details-button" data-modal="modal2">View Details</button>
+      </div>
+      <div class="project-card" data-category="robotic">
+        <div class="carousel-container">
+          <div class="carousel">
+            <img src="หุ่นยนต์1.jpg" alt="Autonomous Rover Image 1"/>
+            <img src="หุ่นยนต์2.jpg" alt="Autonomous Rover Image 2"/>
+            <img src="หุ่นยนต์3.jpg" alt="Autonomous Rover Image 3"/>
+          </div>
+          <button class="carousel-button prev">❮</button>
+          <button class="carousel-button next">❯</button>
+        </div>
+        <h3>Autonomous Rover</h3>
+        <p>A robotic rover with obstacle avoidance using Arduino and sensors.</p>
+        <button class="details-button" data-modal="modal3">View Details</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODALS -->
+  <div class="modal" id="modal1">
+    <div class="modal-content">
+      <span class="modal-close">×</span>
+      <h3>Profit Calculator</h3>
+      <div class="carousel-container">
+        <div class="carousel">
+          <img src="ภาพถ่ายหน้าจอ1.png" alt="Profit Calculator Screenshot 1"/>
+          <img src="ภาพถ่ายหน้าจอ2.png" alt="Profit Calculator Screenshot 2"/>
+          <img src="ภาพถ่ายหน้าจอ3.png" alt="Profit Calculator Screenshot 3"/>
+        </div>
+        <button class="carousel-button prev">◀</button>
+        <button class="carousel-button next">▶</button>
+      </div>
+      <p>This Python application calculates selling prices using a simple mathematical formula, facilitating profit determination for business operations. Developed in Visual Studio Code, it features a user-friendly interface for rapid calculations.</p>
+      <p>Key features include:</p>
+      <ul>
+        <li>Input fields for cost and profit percentage</li>
+        <li>Instantaneous calculation of selling price</li>
+        <li>Streamlined and intuitive interface</li>
+        <li>Efficiency in business calculations</li>
+      </ul>
+      <div class="project-details-frame">
+        <h4>Software Utilized</h4>
+        <p>Visual Studio Code</p>
+        <h4>Operational Methodology</h4>
+        <p>Employs a mathematical formula, (Cost Price × (100 + Profit Percentage)/100 = Selling Price), integrated into a computational function within the code.</p>
+        <h4>Outcomes Achieved</h4>
+        <p>Enhanced proficiency in Python programming, enabling its application to real-world scenarios, such as family businesses in catering, tutoring, and poultry farming. The application streamlines calculations, eliminating the need for manual formula derivation, making it ideal for individuals with limited mathematical skills, as it requires only numerical input into a user interface for instantaneous results.</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="modal2">
+    <div class="modal-content">
+      <span class="modal-close">×</span>
+      <h3>Guava Quality Analysis</h3>
+      <div class="carousel-container">
+        <div class="carousel">
+          <img src="IMG_4759.jpg" alt="Guava Quality Analysis Image 1"/>
+          <img src="IMG_4761.jpg" alt="Guava Quality Analysis Image 2"/>
+          <img src="IMG_4831.jpg" alt="Guava Quality Analysis Image 3"/>
+          <img src="IMG_4771.jpg" alt="Guava Quality Analysis Image 4"/>
+        </div>
+        <button class="carousel-button prev">◀</button>
+        <button class="carousel-button next">▶</button>
+      </div>
+      <p>Presented at the Siam Physics Congress (SPC2025), held from June 11–13, 2025, at Pullman Hotel, Khon Kaen, organized by Khon Kaen University. This research, conducted in the field of Biophysics, was showcased via a poster presentation titled 'Applications of Electrical Properties in the Postharvest Quality Assessment of Guava Fruit.'</p>
+      <p>Key features include:</p>
+      <ul>
+        <li>Non-Destructive Quality Evaluation</li>
+        <li>Analysis of Electrical Properties</li>
+        <li>Poster Presentation at SPC2025</li>
+        <li>Data Visualization and Interpretation</li>
+      </ul>
+      <div class="project-details-frame">
+        <h4>Instrument Utilized</h4>
+        <p>LCR Meter</p>
+        <h4>Operational Methodology</h4>
+        <p>In recent decades, numerous studies have been conducted to develop accurate and precise food quality evaluation techniques. Increasing consumer demand for information about internal fruit quality, such as freshness and sweetness, necessitates cost-effective detection methods. The need for information on postharvest fruit quality makes it possible to utilize electrical properties as a novel approach for quality evaluation. In this study, the electrical parameters—resistance, conductance, and impedance—of harvested guava fruits were measured using a high-precision LCR (inductance, capacitance, and resistance) meter. All electrical property measurements were performed at a frequency of 1 kHz. Sugar content, measured in Brix, was also determined. The relationship between electrical resistance and sugar content was investigated during a 21-day storage period. Results showed electrical resistance and impedance decreased with increasing storage time, while electrical conductance and sugar content increased. The loss of fruit moisture during storage may explain the decrease in electrical resistance and the increase in electrical capacitance and sugar content.</p>
+        <h4>Outcomes Achieved</h4>
+        <p>Received guidance from expert academics, acquired knowledge on advancing the project for agricultural applications, and developed skills in presenting scientific research.</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="modal3">
+    <div class="modal-content">
+      <span class="modal-close">×</span>
+      <h3>Autonomous Rover</h3>
+      <div class="carousel-container">
+        <div class="carousel">
+          <img src="หุ่นยนต์1.jpg" alt="Autonomous Rover Image 1"/>
+          <img src="หุ่นยนต์2.jpg" alt="Autonomous Rover Image 2"/>
+          <img src="หุ่นยนต์3.jpg" alt="Autonomous Rover Image 3"/>
+        </div>
+        <button class="carousel-button prev">◀</button>
+        <button class="carousel-button next">▶</button>
+      </div>
+      <p>A robotic rover built with Arduino, equipped with ultrasonic sensors for obstacle avoidance. Designed for autonomous navigation in dynamic environments, it utilizes a combination of sensors and algorithms to map and traverse its surroundings.</p>
+      <p>Key features include:</p>
+      <ul>
+        <li>Obstacle Detection and Avoidance</li>
+        <li>Autonomous Path Planning</li>
+        <li>Real-Time Sensor Data Processing</li>
+        <li>Modular Hardware Design</li>
+      </ul>
+      <div class="project-details-frame">
+        <h4>Software Utilized</h4>
+        <p>Arduino IDE</p>
+        <h4>Operational Methodology</h4>
+        <p>Utilizes ultrasonic sensors to detect obstacles and adjusts navigation pathways through algorithms programmed within the Arduino microcontroller.</p>
+        <h4>Outcomes Achieved</h4>
+        <p>Gained experience in robotic development, sensor integration, and embedded systems programming, enhancing problem-solving skills in dynamic environments.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2025 DevDark | Designed with passion ⚡
+  </footer>
+
+  <!-- JS -->
+  <script>
+    // Rain effect
+    function createRaindrops() {
+      const rainContainer = document.querySelector('.rain-container');
+      const count = 100;
+      for (let i = 0; i < count; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'raindrop';
+        const size = Math.random() * 0.5 + 0.5;
+        drop.style.width = `${2 * size}px`;
+        drop.style.height = `${20 * size}px`;
+        drop.style.left = `${Math.random() * 100}vw`;
+        drop.style.animationDuration = `${Math.random() * 1 + 1}s`;
+        drop.style.animationDelay = `${Math.random() * 2}s`;
+        drop.style.opacity = Math.random() * 0.4 + 0.3;
+        drop.style.filter = `blur(${Math.random() * 1}px)`;
+        drop.style.zIndex = Math.random() < 0.5 ? 0 : 2;
+        rainContainer.appendChild(drop);
+      }
+    }
+    createRaindrops();
+
+    // Glowing cursor
+    const circle = document.getElementById('circle');
+    document.addEventListener('mousemove', (e) => {
+      circle.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`;
+    });
+
+    // Page load
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loader');
+      const percentageElement = document.querySelector('.loader-percentage');
+      const progressBar = document.querySelector('.loader-content .progress');
+      let percentage = 0;
+      const interval = setInterval(() => {
+        percentageElement.textContent = `${percentage}%`;
+        progressBar.style.width = `${percentage}%`;
+        percentage += 1;
+        if (percentage > 100) {
+          clearInterval(interval);
+        }
+      }, 10);
+      setTimeout(() => {
+        loader.classList.add('hidden');
+      }, 1000);
+    });
+
+    // Project filter
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    function filterProjects(category) {
+      projectCards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+        if (category === 'all' || cardCategory === category) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        filterTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const filter = tab.getAttribute('data-filter');
+        filterProjects(filter);
+      });
+    });
+
+    // Modal functionality
+    const detailButtons = document.querySelectorAll('.details-button');
+    const modals = document.querySelectorAll('.modal');
+    const closeButtons = document.querySelectorAll('.modal-close');
+
+    function openModal(modal) {
+      modal.style.display = 'flex';
+      document.body.classList.add('no-scroll');
+    }
+
+    function closeModal(modal) {
+      modal.style.display = 'none';
+      document.body.classList.remove('no-scroll');
+    }
+
+    detailButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const modalId = button.getAttribute('data-modal');
+        const modal = document.getElementById(modalId);
+        openModal(modal);
+      });
+    });
+
+    closeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const modal = button.closest('.modal');
+        closeModal(modal);
+      });
+    });
+
+    modals.forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal(modal);
+        }
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        modals.forEach(modal => {
+          closeModal(modal);
+        });
+      }
+    });
+
+    // Carousel functionality
+    const carousels = document.querySelectorAll('.carousel-container');
+    carousels.forEach(container => {
+      const carousel = container.querySelector('.carousel');
+      const prevButton = container.querySelector('.carousel-button.prev');
+      const nextButton = container.querySelector('.carousel-button.next');
+      let currentIndex = 0;
+      const totalImages = carousel.children.length;
+
+      function showSlide(index) {
+        if (index < 0) index = totalImages - 1;
+        if (index >= totalImages) index = 0;
+        currentIndex = index;
+        carousel.style.transform = `translate(-${currentIndex * 100 / totalImages}%)`;
+      }
+
+      prevButton.addEventListener('click', () => showSlide(currentIndex - 1));
+      nextButton.addEventListener('click', () => showSlide(currentIndex + 1));
+    });
+  </script>
+</body>
+</html>
